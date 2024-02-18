@@ -1,0 +1,13 @@
+[allhosts]
+
+[allhosts:children]
+main
+nodes
+
+[main]
+turing ansible_host=192.168.178.200
+
+[nodes]
+node01 ansible_host=192.168.178.201 role="controller"
+node02 ansible_host=192.168.178.202 role="worker"
+node03 ansible_host=192.168.178.203 role="worker"

@@ -1,0 +1,39 @@
+---
+- name: Download K3s binary arm64
+  ansible.builtin.get_url:
+    url: https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s-arm64
+    checksum: sha256:https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/sha256sum-arm64.txt
+    dest: /usr/local/bin/k3s
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Download K3s install script.
+  ansible.builtin.get_url:
+    url: https://get.k3s.io
+    dest: "/root/k3s_install.sh"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Sysctl
+  ansible.builtin.command: sysctl --system
+  changed_when: false
+
+- name: Create rancher directory
+  ansible.builtin.file:
+    path: /etc/rancher/k3s
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  register: k3_home_dir
+
+- name: Copy k3 controller config
+  ansible.builtin.template:
+    src: controller.config.yaml.j2
+    dest: "{{ k3_home_dir.path }}/config.yaml"
+    owner: root
+    group: root
+    mode: "0644"
+  when: "'controller' in hostvars[inventory_hostname]['role']"

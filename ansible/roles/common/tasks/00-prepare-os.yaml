@@ -1,0 +1,48 @@
+---
+- name: Ensure cgroups are configured correctly in cmdline.txt.
+  ansible.builtin.replace:
+    path: /boot/cmdline.txt
+    regexp: '^([\w](?!.*\b{{ item }}\b).*)$'
+    replace: '\1 {{ item }}'
+  with_items:
+    - "cgroup_enable=cpuset "
+    - "cgroup_enable=memory"
+    - "cgroup_memory=1"
+  notify: reboot-pi
+
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Detect iptables switch to iptables-legacy
+  when:
+    - ansible_facts.packages['iptables'] is defined
+    - ansible_facts.packages['iptables'][0]['version'] is version('1.6.2', '<')
+  block:
+    - name: Iptables version on node
+      ansible.builtin.debug:
+        msg: "iptables version {{ ansible_facts.packages['iptables'][0]['version'] }} found"
+
+    - name: Flush iptables before changing to iptables-legacy
+      ansible.builtin.iptables:
+        flush: true
+      changed_when: false
+
+    - name: Changing to iptables-legacy
+      community.general.alternatives:
+        path: /usr/sbin/iptables-legacy
+        name: iptables
+      register: ip4_legacy
+
+    - name: Changing to ip6tables-legacy
+      community.general.alternatives:
+        path: /usr/sbin/ip6tables-legacy
+        name: ip6tables
+      register: ip6_legacy
+
+- name: deploy hosts file
+  template:
+    src: "roles/common/templates/hosts.j2"
+    dest: "/etc/hosts"
+    owner: root
+    mode: 0644

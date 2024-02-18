@@ -1,0 +1,10 @@
+---
+- name: Prepare OS
+  import_tasks: 00-prepare-os.yaml
+  tags: prepare-os
+- name: Prepare K3s
+  import_tasks: 01-prepare-k3.yaml
+  tags: prepare-k3
+- name: Install K3s
+  import_tasks: 02-install-k3s.yaml
+  tags: install-k3s

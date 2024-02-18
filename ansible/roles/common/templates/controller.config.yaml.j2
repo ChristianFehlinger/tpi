@@ -1,0 +1,9 @@
+write-kubeconfig-mode: "644"
+disable:
+  - servicelb
+  - cloud-controller
+  - local-storage
+node-ip: {{ hostvars[inventory_hostname]['ansible_host'] }}
+bind-address: {{ hostvars[inventory_hostname]['ansible_host'] }}
+token: 1234567890
+cluster-init: true

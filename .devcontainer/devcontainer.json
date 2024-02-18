@@ -1,0 +1,15 @@
+{
+  "name": "Existing Dockerfile",
+  "context": "..",
+  "dockerFile": "../Dockerfile",
+  "containerEnv": {},
+  "remoteEnv": {},
+
+  // "image" : "ansible-turingpi:latest",
+
+  "settings": {
+    "terminal.integrated.shell.linux": null,
+  },
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": ["zbr.vscode-ansible", "ms-azuretools.vscode-docker"],
+}

@@ -25,8 +25,10 @@ chmod 755 .
 
 out_put=$(ansible nodes -m ping -u pi)
 
-if echo "$out_put" | grep -q '"unreachable": true'; then
-    echo "Some hosts are unreachable."
-else
-    ansible-playbook ansible/turing.yml --diff
-fi
+# if echo "$out_put" | grep -q '"unreachable": true'; then
+#     echo "Some hosts are unreachable."
+# else
+#     ansible-playbook ansible/turing.yml --diff
+# fi
+
+ansible-playbook ansible/turing.yml --limit rk1 --diff

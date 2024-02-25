@@ -1,0 +1,4 @@
+---
+- name: Prepare OS
+  import_tasks: 00-prepare-os.yaml
+  tags: prepare-os

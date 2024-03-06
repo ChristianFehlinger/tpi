@@ -1,0 +1,73 @@
+version: "3"
+
+dotenv: [".auth"]
+silent: true
+
+vars:
+  EXMAPLE: public/bundle.js
+
+tasks:
+  default:
+    desc: List all options
+    aliases: [list, ls]
+    cmds:
+      - task --list
+
+  template_check:
+    desc: Check variable - {{.var_name}}
+    internal: true
+    cmds:
+      - |
+        if [[ -z ${{.var_name}} ]]; then
+          echo "Error {{.var_name}} is empty. Please add to the .auth file.";
+          exit 1;
+        fi
+
+  check:
+    desc: Check env
+    internal: true
+    cmds:
+      - task: template_check
+        internal: true
+        vars:
+          var_name: "id_rsa"
+      - task: template_check
+        internal: true
+        vars:
+          var_name: "id_rsa_pub"
+
+  prepare:
+    desc: Prepare execution
+    internal: true
+    cmds:
+      - |
+        mkdir -p ${HOME}/.ssh
+        echo "${id_rsa_pub}" | base64 -d > ${HOME}/.ssh/id_rsa.pub
+        echo "${id_rsa}" | base64 -d > ${HOME}/.ssh/id_rsa
+
+        chmod 600 ${HOME}/.ssh/*
+        cp hosts /etc/ansible/
+
+  ping:
+    desc: ping cluster nodes
+    internal: true
+    cmds:
+      - |
+        out_put=$(ansible nodes -m ping -u pi)
+        if echo "$out_put" | grep -q '"unreachable": true'; then
+            echo "Some hosts are unreachable."
+        fi
+
+  ansible_apply:
+    desc: Apply ansible
+    aliases: [apply]
+    deps:
+      - task: check
+        internal: true
+      - task: prepare
+        internal: true
+      - task: ping
+        internal: true
+    cmds:
+      - |
+        ansible-playbook ansible/turing.yml --limit rk1 --diff

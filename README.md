@@ -26,6 +26,8 @@
    This file is used from ansible to connect to the clients.
 
 ```bash
+  export turing_password=<PASSWORD>
+  export turing_ip=<IP>
   export id_rsa_pub=c3NoLXXX
   export id_rsa=LS0tXXXX
 ```
@@ -43,3 +45,4 @@ Replace `default` with e.g. `turingpi` and add the sections `cluster`, `contexts
 - [TuringPi2](https://docs.turingpi.com)
 - [k3s](https://docs.k3s.io/)
 - [ansible](https://www.ansible.com/)
+- [arkade](https://github.com/alexellis/arkade)

@@ -40,9 +40,19 @@ There is a short [article](https://docs.k3s.io/cluster-access).
 Copy the file `/etc/rancher/k3s/k3s.yaml` to your local.
 Replace `default` with e.g. `turingpi` and add the sections `cluster`, `contexts` and `user` to your existing kube-config.
 
+4. Install metallb
+
+```bash
+# Adjust configmap.yaml to your ip-range
+  kubectl apply -k ./kubernetes/metallb
+# Example
+kubectl apply -f ./kubernetes/example
+```
+
 # Links
 
 - [TuringPi2](https://docs.turingpi.com)
 - [k3s](https://docs.k3s.io/)
 - [ansible](https://www.ansible.com/)
 - [arkade](https://github.com/alexellis/arkade)
+- [metallb](https://github.com/metallb/metallb)

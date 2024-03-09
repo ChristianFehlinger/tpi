@@ -31,10 +31,10 @@ install:
     if [ "$input" -eq 0 ] || [ "$input" -eq 1 ]; then
         response=$(curl -sk  "https://$turing_ip/api/bmc?type=power&opt=set&node1=${input}&node2=${input}&node3=${input}&node4=${input}" --header "Authorization: Bearer $token")
         if [[ $(echo "$response" | jq -r '.response[0].result') == "ok" ]]; then
-          echo "Should start be starting"
+          echo "Starting...."
         fi
     else
-        echo "wrong input. Please use 0 or 1."
+        echo "Wrong input. Please use 0 or 1."
     fi
 
 # shows status of the turing pi
